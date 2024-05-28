@@ -73,7 +73,7 @@ function Add() {
 
 function Update() {
     var cliObj = {
-        "idCliente": $('#IdCliente'),
+          "idCliente": $('#IdCliente'),
         "nombre": $('#Nombre').val(),
         "apellidoPaterno": $('#ApellidoPaterno').val(),
         "apellidoMaterno": $('#ApellidoMaterno').val(),
