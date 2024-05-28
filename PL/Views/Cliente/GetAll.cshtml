@@ -1,0 +1,87 @@
+﻿@model ML.Cliente
+@{
+    ViewBag.Title = "GetAll";
+}
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Empleado</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="~/js/site.js"></script>
+    </head>
+    <body>
+        <h1 class="text-center">Cliente</h1>
+    <button type="button" class="btn btn-dark btn-lg" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">Agregar</button>
+
+    <table id="tabla-cliente" class="table table-bordered border-primary table-light table-striped text-center">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido Paterno</th>
+                <th scope="col">Apellido Materno</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Fecha de registro</th>
+                <th scope="col">Sucusal</th>
+                <th scope="col">Modificar</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Clientes</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="Nombre">Nombre</label>
+                            <input type="text" class="form-control" id="Nombre" name="Nombre" placeholder="Nombre" />
+                        </div>
+                        <div class="form-group">
+                            <label for="ApellidoPaterno">Apellido Paterno</label>
+                            <input type="text" class="form-control" id="ApellidoPaterno" name="ApellidoPaterno" placeholder="Apellido Paterno" />
+                        </div>
+                        <div class="form-group">
+                            <label for="ApellidoPaterno">Apellido Materno</label>
+                            <input type="text" class="form-control" id="ApellidoMaterno" name="ApellidoMaterno" placeholder="Apellido Materno" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Email">Email</label>
+                            <input type="text" class="form-control" id="Email" name="Email" placeholder="Email" />
+                        </div>
+                        <div class="form-group">
+                            <label for="Telefono">Telefono</label>
+                            <input type="text" class="form-control" id="Telefono" name="Telefono" placeholder="Telefono" />
+                        </div>
+                        <div class="form-group">
+                            <label for="FechaRegistro">FechaRegistro</label>
+                            <input type="date" class="form-control" id="FechaRegistro" name="FechaRegistro" placeholder="FechaRegistro" />
+                        </div>
+                        <div class="form-group">
+                            <label for="IdSucursal">Sucursal</label>
+                            <select class="form-control" id="IdSucursal" name="IdSucursal"></select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnAdd" onclick="return Add();">Agregar</button>
+                    <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="Update();">Actulizar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
