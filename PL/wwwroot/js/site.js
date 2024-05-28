@@ -35,7 +35,7 @@ function GetAll() {
 
 function Add() {
     var cliObj = {
-        "idCliente": null,
+        "idCliente": 0,
         "nombre": $('#Nombre').val(),
         "apellidoPaterno": $('#ApellidoPaterno').val(),
         "apellidoMaterno": $('#ApellidoMaterno').val(),
@@ -44,7 +44,14 @@ function Add() {
         "fecha_Registro": $('#FechaRegistro').val(),
         "sucursal": {
             "idSucursal": parseInt($("#IdSucursal").val()),
-        }
+            "nombre": "",
+            "sucursales": [
+                null
+            ]
+        },
+        "clientes": [
+            null
+        ]
     };
     $.ajax({
         url: "http://localhost:5140/api/Cliente/Add",
@@ -75,7 +82,14 @@ function Update() {
         "fecha_Registro": $('#FechaRegistro').val(),
         "sucursal": {
             "idSucursal": parseInt($("#IdSucursal").val()),
-        }
+            "nombre": "",
+            "sucursales": [
+                null
+            ]
+        },
+        "clientes": [
+            null
+        ]
     };
     $.ajax({
         url: "http://localhost:5140/api/Cliente/Update",
