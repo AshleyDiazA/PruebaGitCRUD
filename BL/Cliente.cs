@@ -1,4 +1,6 @@
-﻿namespace BL
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace BL
 {
     public class Cliente
     {
@@ -78,16 +80,55 @@
                 return (false, ex.Message, ex);
             }
         }
-        public static (bool, string, ML.Cliente, Exception) GetAll()
+        public static (bool, string, List<ML.Cliente>, Exception) GetAll()
         {
             ML.Cliente clientes = new ML.Cliente();
             clientes.Clientes = new List<ML.Cliente>();
             try
             {
-                using (DL.Class1 context = new DL.Class1())
+                using (DL.SucursalCrudgitContext context = new DL.SucursalCrudgitContext())
                 {
+                    var result = (from cliente in context.Clientes
+                                  select new
+                                  {
+                                      IdCliente = cliente.IdCliente,
+                                      Nombre = cliente.Nombre,
+                                      ApellidoPaterno = cliente.ApellidoPaterno,
+                                      ApellidoMaterno = cliente.ApellidoMaterno,
+                                      Email = cliente.Email,
+                                      FechaRegistro = cliente.FechaRegistro,
+                                      Telefono = cliente.Telefono,
+                                      IdSucursal = cliente.IdSucursal,
+                                      NombreSucursal = cliente.IdSucursalNavigation.Nombre
+                                  }).ToList();
 
-                    return (true, null, clientes, null);
+
+                    if (result != null)
+                    {
+                        foreach (var item in result)
+                        {
+                            ML.Cliente objCliente = new ML.Cliente();
+
+                            objCliente.IdCliente = item.IdCliente;
+                            objCliente.Nombre = item.Nombre;
+                            objCliente.ApellidoPaterno = item.ApellidoPaterno;
+                            objCliente.Email = item.Email;
+                            objCliente.Telefono = item.Telefono;
+
+                            objCliente.Sucursal = new ML.Sucursal();
+                            objCliente.Sucursal.IdSucursal = item.IdSucursal;
+                            objCliente.Sucursal.Nombre = item.NombreSucursal;
+
+                            clientes.Clientes.Add(objCliente);
+                        }
+
+                        return (true, null, clientes.Clientes, null);
+                    }
+                    else
+                    {
+                        return (false, "Esta vacio", null, null);
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -100,9 +141,41 @@
             ML.Cliente cliente = new ML.Cliente();
             try
             {
-                using (DL.Class1 context = new DL.Class1())
+                using (DL.SucursalCrudgitContext context = new DL.SucursalCrudgitContext())
                 {
-                    return (true, null, cliente, null);
+                    var result = (from clientes in context.Clientes
+                                  where clientes.IdCliente == IdCliente
+                                  select new
+                                  {
+                                      IdCliente = clientes.IdCliente,
+                                      Nombre = clientes.Nombre,
+                                      ApellidoPaterno = clientes.ApellidoPaterno,
+                                      ApellidoMaterno = clientes.ApellidoMaterno,
+                                      Email = clientes.Email,
+                                      Telefono = clientes.Telefono,
+                                      IdSucursal = clientes.IdSucursal
+                                  }).SingleOrDefault();
+
+                    if (result.IdCliente > 0)
+                    {
+                        cliente.IdCliente = result.IdCliente;
+                        cliente.Nombre = result.Nombre;
+                        cliente.ApellidoPaterno = result.ApellidoPaterno;
+                        cliente.ApellidoMaterno = result.ApellidoMaterno;
+                        cliente.Email = result.Email;
+                        cliente.Telefono = result.Telefono;
+
+                        cliente.Sucursal = new ML.Sucursal();
+                        cliente.Sucursal.IdSucursal = result.IdSucursal;
+
+
+                        return (true, null, cliente, null);
+                    }
+                    else
+                    {
+                        return (false, "No existe el registro", null, null);
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -120,9 +193,35 @@
             sucursales.Sucursales = new List<ML.Sucursal>();
             try
             {
-                using (DL.Class1 context = new DL.Class1())
+                using (DL.SucursalCrudgitContext context = new DL.SucursalCrudgitContext())
                 {
-                    return (true, null, sucursales, null);
+                    var result = (from sucursal in context.Sucursals
+                                  select new
+                                  {
+
+                                      IdSucursal = sucursal.IdSucursal,
+                                      Nombre = sucursal.Nombre
+                                  }).ToList();
+
+                    if (result != null)
+                    {
+                        foreach (var item in result)
+                        {
+                            ML.Sucursal objSucursal = new ML.Sucursal();
+
+                            objSucursal.IdSucursal = item.IdSucursal;
+                            objSucursal.Nombre = item.Nombre;
+
+                            sucursales.Sucursales.Add(objSucursal);
+                        }
+
+                        return (true, null, sucursales, null);
+                    }
+                    else
+                    {
+                        return (false, "No hay registros", null, null);
+                    }
+
                 }
             }
             catch (Exception ex)

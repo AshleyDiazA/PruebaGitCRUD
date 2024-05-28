@@ -69,7 +69,7 @@ namespace SL.Controllers
                 return BadRequest(result.Item2);
             }
         }
-        [HttpPost]
+        [HttpGet]
         [Route("GetById")]
         public IActionResult GetById(int IdCliente)
         {
@@ -77,7 +77,7 @@ namespace SL.Controllers
 
             if (result.Item1)
             {
-                return Ok(result.Item1);
+                return Ok(result.Item3);
             }
             else
             {
@@ -92,7 +92,7 @@ namespace SL.Controllers
 
             if (result.Item1)
             {
-                return Ok(result.Item1);
+                return Ok(result.Item3.Sucursales);
             }
             else
             {

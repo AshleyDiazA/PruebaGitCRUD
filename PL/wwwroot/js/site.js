@@ -9,19 +9,20 @@
 function GetAll() {
     $.ajax({
         type: 'GET',
-        url: '',
-        dataType: 'JSON',
+        url: 'http://localhost:5140/api/Cliente/GetAll',
+        dataType: 'json',
         success: function (data) {
             var reload = '';
             $.each(data, function (GetAll, Cliente) {
                 reload += '<tr>';
-                reload += '<td>' + Cliente.Nombre + '</td>';
-                reload += '<td>' + Cliente.ApellidoPaterno + '</td>';
-                reload += '<td>' + Cliente.ApellidoMaterno + '</td>';
-                reload += '<td>' + Cliente.Email + '</td>';
-                reload += '<td>' + Cliente.Telefono + '</td>';
-                reload += '<td>' + Cliente.Sucusal.Nombre + '</td>';
-                reload += '<td><a class="btn btn-warning" href="#" onclick="return getbyID(' + Cliente.IdCliente + ')">Editar</a> | <a class="btn btn-danger" href="#" onclick="Delele(' + Empleado.IdCliente + ')">Borrar</a></td>';
+                reload += '<td>' + Cliente.nombre + '</td>';
+                reload += '<td>' + Cliente.apellidoPaterno + '</td>';
+                reload += '<td>' + Cliente.apellidoMaterno + '</td>';
+                reload += '<td>' + Cliente.email + '</td>';
+                reload += '<td>' + Cliente.telefono + '</td>';
+                reload += '<td>' + Cliente.fecha_Registro + '</td>';
+                reload += '<td>' + Cliente.sucursal.nombre + '</td>';
+                reload += '<td><a class="btn btn-warning" href="#" onclick="return getbyID(' + Cliente.idCliente + ')">Editar</a> | <a class="btn btn-danger" href="#" onclick="Delele(' + Cliente.idCliente + ')">Borrar</a></td>';
                 reload += '</tr>';
             });
             $('#tabla-cliente tbody').html(reload);
@@ -34,10 +35,19 @@ function GetAll() {
 
 function Add() {
     var cliObj = {
-
+        "idCliente": null,
+        "nombre": $('#Nombre').val(),
+        "apellidoPaterno": $('#ApellidoPaterno').val(),
+        "apellidoMaterno": $('#ApellidoMaterno').val(),
+        "email": $('#Email').val(),
+        "telefono": $('#Telefono').val(),
+        "fecha_Registro": $('#FechaRegistro').val(),
+        "sucursal": {
+            "idSucursal": parseInt($("#IdSucursal").val()),
+        }
     };
     $.ajax({
-        url: "",
+        url: "http://localhost:5140/api/Cliente/Add",
         data: JSON.stringify(cliObj),
         type: "POST",
         contentType: "application/json",
@@ -56,10 +66,19 @@ function Add() {
 
 function Update() {
     var cliObj = {
-
+        "idCliente": $('#IdCliente'),
+        "nombre": $('#Nombre').val(),
+        "apellidoPaterno": $('#ApellidoPaterno').val(),
+        "apellidoMaterno": $('#ApellidoMaterno').val(),
+        "email": $('#Email').val(),
+        "telefono": $('#Telefono').val(),
+        "fecha_Registro": $('#FechaRegistro').val(),
+        "sucursal": {
+            "idSucursal": parseInt($("#IdSucursal").val()),
+        }
     };
     $.ajax({
-        url: "",
+        url: "http://localhost:5140/api/Cliente/Update",
         data: JSON.stringify(cliObj),
         type: "PUT",
         contentType: "application/json",
@@ -86,7 +105,7 @@ function Delete(IdCliente) {
     var borrar = confirm("Seguro que deseas borrarlo");
     if (borrar) {
         $.ajax({
-            url: "" + IdCliente,
+            url: "http://localhost:5140/api/Cliente/Delete?IdCliente=" + IdCliente,
             type: "DELETE",
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
@@ -100,7 +119,7 @@ function Delete(IdCliente) {
     }
 }
 
-function getbyID(IdCliente) {
+function getbyID(idCliente) {
     $('#Nombre').css('border-color', 'lightgrey');
     $('#ApellidoPaterno').css('border-color', 'lightgrey');
     $('#ApellidoMaterno').css('border-color', 'lightgrey');
@@ -109,19 +128,19 @@ function getbyID(IdCliente) {
     $('#FechaRegistro').css('border-color', 'lightgrey');
     $('#IdSucursal').css('border-color', 'lightgrey');
     $.ajax({
-        url: "" + IdCliente,
+        url: "http://localhost:5140/api/Cliente/GetById?IdCliente=" + idCliente,
         type: "GET",
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         success: function (result) {
-            $('#IdCliente').val(result.IdCliente);
-            $('#Nombre').val(result.Nombre);
-            $('#ApellidoPaterno').val(result.ApellidoPaterno);
-            $('#ApellidoMaterno').val(result.ApellidoMaterno);
-            $('#Email').val(result.Email);
-            $('#Telefono').val(result.Email);
-            $('#FechaRegistro').val(result.Email);
-            $('#IdSucursal').val(result.Surcusal.IdSurcursal)
+            $('#IdCliente').val(result.idCliente);
+            $('#Nombre').val(result.nombre);
+            $('#ApellidoPaterno').val(result.apellidoPaterno);
+            $('#ApellidoMaterno').val(result.apellidoMaterno);
+            $('#Email').val(result.email);
+            $('#Telefono').val(result.telefono);
+            $('#FechaRegistro').val(result.fecha_Registro);
+            $('#IdSucursal').val(result.sucursal.idSucursal)
 
             $('#myModal').modal('show');
             $('#btnUpdate').show();
@@ -147,18 +166,18 @@ function getbyID(IdCliente) {
 //            $("#IdSurcursal").html(s);
 //        }
 //    })
-//})
+//}) 
 $(document).ready(function () {
     $.ajax({
         type: "GET",
-        url: "",
+        url: "http://localhost:5140/api/Cliente/GetAllSucursal",
         data: "{}",
         success: function (data) {
             var s = '<option value="-1">Selecciona una sucursal</option>';
             for (var i = 0; i < data.length; i++) {
-                s += '<option value="' + data[i].IdSucursal + '">' + data[i].Nombre + '</option>';
+                s += '<option value="' + data[i].idSucursal + '">' + data[i].nombre + '</option>';
             }
-            $("#IdSurcursal").html(s);
+            $("#IdSucursal").html(s);
         }
     });
 });
