@@ -100,7 +100,7 @@ function Update() {
         dataType: "json",
         success: function (result) {
             GetAll();
-            $('#myModal').modal('hide');
+            $('#myModal').modal('toggle'); // Modificado aquí
             $('#IdCliente').val("");
             $('#Nombre').val("");
             $('#ApellidoPaterno').val("");
@@ -115,6 +115,7 @@ function Update() {
         }
     });
 }
+
 
 
 function Delete(IdCliente) {
