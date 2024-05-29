@@ -20,7 +20,7 @@ function GetAll() {
                 reload += '<td>' + Cliente.apellidoMaterno + '</td>';
                 reload += '<td>' + Cliente.email + '</td>';
                 reload += '<td>' + Cliente.telefono + '</td>';
-                reload += '<td>' + Cliente.fecha_Registro+ '</td>';
+                reload += '<td>' + Cliente.fecha_Registro + '</td>';
                 reload += '<td>' + Cliente.sucursal.nombre + '</td>';
                 reload += '<td><a class="btn btn-warning" href="#" onclick="return getbyID(' + Cliente.idCliente + ')">Editar</a> | <a class="btn btn-danger" href="#" onclick="Delete(' + Cliente.idCliente + ')">Borrar</a></td>';
                 reload += '</tr>';

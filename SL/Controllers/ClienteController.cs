@@ -54,6 +54,7 @@ namespace SL.Controllers
                 return BadRequest(result.Item2);
             }
         }
+
         [HttpGet]
         [Route("GetAll")]
         public IActionResult GetAll()
@@ -69,6 +70,7 @@ namespace SL.Controllers
                 return BadRequest(result.Item2);
             }
         }
+
         [HttpGet]
         [Route("GetById")]
         public IActionResult GetById(int IdCliente)
@@ -84,6 +86,7 @@ namespace SL.Controllers
                 return BadRequest(result.Item2);
             }
         }
+
         [HttpGet]
         [Route("GetAllSucursal")]
         public IActionResult GetAllSucursal()
