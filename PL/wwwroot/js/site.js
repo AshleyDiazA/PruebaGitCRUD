@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿var objPagination = {}
+$(document).ready(function () {
     GetAll();
 })
 
@@ -13,6 +14,8 @@ function GetAll() {
         dataType: 'json',
         success: function (data) {
             var reload = '';
+            objPagination["dataArray"] = [...data]
+            objPagination["endPagination"] = data.length
             $.each(data, (GetAll, Cliente) => {
                 reload += '<tr>';
                 reload += '<td>' + Cliente.nombre + '</td>';
@@ -219,7 +222,22 @@ function clearTextBox() {
     $('#IdSurcursal').css('border-color', 'lightgrey');
 }
 
+
 function Cerrar() {
     $('#btnClose').click();
 }
 
+function listItem(event) {
+    objPagination["currentPage"] = parseInt(event.target.text)
+    let getList = $(event.currentTarget)
+    let takeToogle = $(event.target).closest('li').hasClass('active')
+    $(event.target).closest('li').toggleClass('active', takeToggle)
+}
+
+function IniciarPaginacion(event) {
+    let init = event.target.selectedIndex
+    objPagination["showPagination"] = parseInt(event.target.options[init].outerText)
+}
+
+$('#PSelect').bind('change', IniciarPaginacion)
+$('#currentPage').bind('click', listItem)
