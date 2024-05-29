@@ -62,7 +62,7 @@ function Add() {
         success: function (result) {
             console.log("Cliente agregado exitosamente.");
             GetAll();
-            $('#myModal').modal('hide');
+            $('#myModal').modal('hide'); // Cerrar el modal
         },
         error: function (errormessage) {
             console.log("No agregado" + errormessage);
@@ -70,6 +70,7 @@ function Add() {
         }
     });
 }
+
 
 function Update() {
     var cliObj = {
