@@ -112,9 +112,10 @@ namespace BL
                             objCliente.IdCliente = item.IdCliente;
                             objCliente.Nombre = item.Nombre;
                             objCliente.ApellidoPaterno = item.ApellidoPaterno;
+                            objCliente.ApellidoMaterno = item.ApellidoMaterno;
                             objCliente.Email = item.Email;
                             objCliente.Telefono = item.Telefono;
-
+                            objCliente.Fecha_Registro = item.FechaRegistro;
                             objCliente.Sucursal = new ML.Sucursal();
                             objCliente.Sucursal.IdSucursal = item.IdSucursal;
                             objCliente.Sucursal.Nombre = item.NombreSucursal;
