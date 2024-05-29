@@ -49,12 +49,12 @@
                     </select>
                 </div>
                 <div class="mx-1 my-2">
-                    <ul class="pagination pagination-sm col-4">
+                    <ul class="pagination pagination-sm col-4" id="currentPage">
                         <li class="page-item disabled">
                             <a class="page-link">Previous</a>
                         </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item active" aria-current="page">
+                        <li class="page-item active"><a class="page-link" aria-current="page" href="#">1</a></li>
+                        <li class="page-item">
                             <a class="page-link" href="#">2</a>
                         </li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
@@ -72,7 +72,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel">Clientes</h4>
-                    <button type="button" id="closeModal"  class="close" data-dismiss="modal">×</button>
+                    <button type="button" id="closeModal" class="close" data-dismiss="modal">×</button>
                 </div>
                 <div class="modal-body">
                     <form>
