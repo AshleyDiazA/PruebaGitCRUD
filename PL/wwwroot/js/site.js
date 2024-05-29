@@ -1,6 +1,8 @@
-﻿var objPagination = {}
+﻿var objPagination = {
+}
 $(document).ready(function () {
     GetAll();
+
 })
 
 //por si no llega a funcionar el document.ready
@@ -14,20 +16,24 @@ function GetAll() {
         dataType: 'json',
         success: function (data) {
             var reload = '';
-            objPagination["dataArray"] = [...data]
+            objPagination["dataSource"] = [...data]
             objPagination["endPagination"] = data.length
-            $.each(data, (GetAll, Cliente) => {
-                reload += '<tr>';
-                reload += '<td>' + Cliente.nombre + '</td>';
-                reload += '<td>' + Cliente.apellidoPaterno + '</td>';
-                reload += '<td>' + Cliente.apellidoMaterno + '</td>';
-                reload += '<td>' + Cliente.email + '</td>';
-                reload += '<td>' + Cliente.telefono + '</td>';
-                reload += '<td>' + new Date(Cliente.fecha_Registro).toLocaleDateString('es-MX') + '</td>';
-                reload += '<td>' + Cliente.sucursal.nombre + '</td>';
-                reload += `<td><div class='d-flex gap-1'><a class='btn btn-sm btn-warning' href='#' onclick='return getbyID(${Cliente.idCliente})'>Editar</a><a class='btn btn-sm btn-danger' href='#' onclick=Delete(${Cliente.idCliente})>Borrar</a></div></td>`;
-                reload += '</tr>';
-            });
+            objPagination["currentPage"] = parseInt($('#currentPage > li.active').map(function () {
+                return $(this).text();
+            }).get()[0]);
+            IniciarPaginacionDOM();
+            //$.each(data, (GetAll, Cliente) => {
+            //    reload += '<tr>';
+            //    reload += '<td>' + Cliente.nombre + '</td>';
+            //    reload += '<td>' + Cliente.apellidoPaterno + '</td>';
+            //    reload += '<td>' + Cliente.apellidoMaterno + '</td>';
+            //    reload += '<td>' + Cliente.email + '</td>';
+            //    reload += '<td>' + Cliente.telefono + '</td>';
+            //    reload += '<td>' + new Date(Cliente.fecha_Registro).toLocaleDateString('es-MX') + '</td>';
+            //    reload += '<td>' + Cliente.sucursal.nombre + '</td>';
+            //    reload += `<td><div class='d-flex gap-1'><a class='btn btn-sm btn-warning' href='#' onclick='return getbyID(${Cliente.idCliente})'>Editar</a><a class='btn btn-sm btn-danger' href='#' onclick=Delete(${Cliente.idCliente})>Borrar</a></div></td>`;
+            //    reload += '</tr>';
+            //});
             $('#tabla-cliente tbody').html(reload);
         },
         error: function (xhr, status, error) {
@@ -230,13 +236,53 @@ function Cerrar() {
 function listItem(event) {
     objPagination["currentPage"] = parseInt(event.target.text)
     let getList = $(event.currentTarget)
-    let takeToogle = $(event.target).closest('li').hasClass('active')
-    $(event.target).closest('li').toggleClass('active', takeToggle)
+    let actualList = $(event.target).closest('li')
+    getList.find('li').removeClass('active')
+    actualList.addClass('active')
+    OperationPage();
 }
 
 function IniciarPaginacion(event) {
     let init = event.target.selectedIndex
     objPagination["showPagination"] = parseInt(event.target.options[init].outerText)
+    OperationPage();
+}
+
+function IniciarPaginacionDOM() {
+    let init = $('#PSelect').prop('selectedIndex')
+    objPagination["showPagination"] = parseInt($('#PSelect').prop('options')[init].text)
+    OperationPage();
+}
+
+function OperationPage() {
+    let showStart = (objPagination['currentPage'] - 1) * objPagination['endPagination']
+    let showEnd = showStart + objPagination['endPagination']
+    if (showEnd > objPagination['dataSource'].length) {
+        showEnd = objPagination['dataSource'].length;
+    }
+    objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
+    $('#tabla-cliente tbody').empty();
+    $.each(objPagination["currentPageData"], (index, value) => {
+        let row = $('<tr>')
+        row.append($('<td>').append(value.nombre))
+        row.append($('<td>').append(value.apellidoPaterno))
+        row.append($('<td>').append(value.apellidoMaterno))
+        row.append($('<td>').append(value.email))
+        row.append($('<td>').append(value.telefono))
+        row.append($('<td>').append(new Date(value.fecha_Registro).toLocaleDateString('es-MX')))
+        row.append($('<td>').append(value.sucursal.nombre))
+        let div = $('<div>')
+        div.addClass('d-flex gap-1')
+            .append($(`<a href='#' onclick='return getbyID(${value.idCliente})'>`).addClass('btn btn-warning btn-sm').text('Editar'))
+            .append($(`<a href='#' onclick='return Delete(${value.idCliente})'>`).addClass('btn btn-danger btn-sm').text('Eliminar'))
+        row.append($('<td>').append(div))
+        console.log(value)
+        $('#tabla-cliente tbody').append(row)
+    })
+}
+
+function buildTable() {
+
 }
 
 $('#PSelect').bind('change', IniciarPaginacion)
