@@ -20,9 +20,9 @@ function GetAll() {
                 reload += '<td>' + Cliente.apellidoMaterno + '</td>';
                 reload += '<td>' + Cliente.email + '</td>';
                 reload += '<td>' + Cliente.telefono + '</td>';
-                reload += '<td>' + Cliente.fecha_Registro + '</td>';
+                reload += '<td>' + Cliente.fecha_Registro+ '</td>';
                 reload += '<td>' + Cliente.sucursal.nombre + '</td>';
-                reload += '<td><a class="btn btn-warning" href="#" onclick="return getbyID(' + Cliente.idCliente + ')">Editar</a> | <a class="btn btn-danger" href="#" onclick="Delele(' + Cliente.idCliente + ')">Borrar</a></td>';
+                reload += '<td><a class="btn btn-warning" href="#" onclick="return getbyID(' + Cliente.idCliente + ')">Editar</a> | <a class="btn btn-danger" href="#" onclick="Delete(' + Cliente.idCliente + ')">Borrar</a></td>';
                 reload += '</tr>';
             });
             $('#tabla-cliente tbody').html(reload);
@@ -73,7 +73,7 @@ function Add() {
 
 function Update() {
     var cliObj = {
-          "idCliente": $('#IdCliente'),
+        "idCliente": ($('#IdCliente').val()),
         "nombre": $('#Nombre').val(),
         "apellidoPaterno": $('#ApellidoPaterno').val(),
         "apellidoMaterno": $('#ApellidoMaterno').val(),
