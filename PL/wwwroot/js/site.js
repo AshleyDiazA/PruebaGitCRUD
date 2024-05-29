@@ -99,32 +99,23 @@ function Update() {
         contentType: "application/json",
         dataType: "json",
         success: function (result) {
-
-            if (result == true) {
-                console.log("Cliente actualizo exitosamente.");
-                GetAll();
-                $('#closeModal').hide();
-
-                
-
-
-                $('#IdCliente').val("");
-                $('#Nombre').val("");
-                $('#ApellidoPaterno').val("");
-                $('#ApellidoMaterno').val("");
-                $('#Email').val("");
-                $('#Telefono').val("");
-                $('#FechaRegistro').val("");
-                $('#IdSucursal').val("");
-            }
-
-
+            GetAll();
+            $('#myModal').modal('hide');
+            $('#IdCliente').val("");
+            $('#Nombre').val("");
+            $('#ApellidoPaterno').val("");
+            $('#ApellidoMaterno').val("");
+            $('#Email').val("");
+            $('#Telefono').val("");
+            $('#FechaRegistro').val("");
+            $('#IdSucursal').val("");
         },
         error: function (errorMessage) {
             alert(errorMessage.responseText);
         }
     });
 }
+
 
 function Delete(IdCliente) {
     var borrar = confirm("Seguro que deseas borrarlo");
