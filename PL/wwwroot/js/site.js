@@ -62,7 +62,7 @@ function Add() {
         success: function (result) {
             console.log("Cliente agregado exitosamente.");
             GetAll();
-            $('#myModal').modal('hide'); // Cerrar el modal
+            $('#closeModal').click();
         },
         error: function (errormessage) {
             console.log("No agregado" + errormessage);
@@ -99,16 +99,26 @@ function Update() {
         contentType: "application/json",
         dataType: "json",
         success: function (result) {
-            GetAll();
-            $('#myModal').modal('hide');
-            $('#IdCliente').val("");
-            $('#Nombre').val("");
-            $('#ApellidoPaterno').val("");
-            $('#ApellidoMaterno').val("");
-            $('#Email').val("");
-            $('#Telefono').val("");
-            $('#FechaRegistro').val("");
-            $('#IdSucursal').val("");
+
+            if (result == true) {
+                console.log("Cliente actualizo exitosamente.");
+                GetAll();
+                $('#closeModal').hide();
+
+                
+
+
+                $('#IdCliente').val("");
+                $('#Nombre').val("");
+                $('#ApellidoPaterno').val("");
+                $('#ApellidoMaterno').val("");
+                $('#Email').val("");
+                $('#Telefono').val("");
+                $('#FechaRegistro').val("");
+                $('#IdSucursal').val("");
+            }
+
+
         },
         error: function (errorMessage) {
             alert(errorMessage.responseText);
@@ -216,3 +226,8 @@ function clearTextBox() {
     $('#FechaRegistro').css('border-color', 'lightgrey');
     $('#IdSurcursal').css('border-color', 'lightgrey');
 }
+
+function Cerrar() {
+    $('#btnClose').click();
+}
+
