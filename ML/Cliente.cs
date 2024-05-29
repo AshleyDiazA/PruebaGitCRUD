@@ -5,16 +5,15 @@ namespace ML
     public class Cliente
     {
         public int IdCliente { get; set; }
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Ingresa solo letras")]
+        [RegularExpression("^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]*$", ErrorMessage = "Ingresa solo letras")]
         public string Nombre { get; set; }
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Ingresa solo letras")]
+        [RegularExpression("^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]*$", ErrorMessage = "Ingresa solo letras")]
         public string ApellidoPaterno { get; set; }
-        [RegularExpression("^[a-zA-Z ]*$", ErrorMessage = "Ingresa solo letras")]
+        [RegularExpression("^[a-zA-ZÀ-ÿ\u00f1\u00d1 ]*$", ErrorMessage = "Ingresa solo letras")]
         public string ApellidoMaterno { get; set; }
-        [DataType(DataType.EmailAddress, ErrorMessage = "Direccion no valida")]
+        [EmailAddress(ErrorMessage = "Dirección no válida")]
         public string Email { get; set; }
-        [RegularExpression("(^[0-9]+$)", ErrorMessage = "Solo se permiten números")]
-        [StringLength(10, ErrorMessage = "El número es demasiado largo")]
+        [RegularExpression("^[0-9]{10}$", ErrorMessage = "El número debe tener exactamente 10 dígitos")]
         public string Telefono { get; set; }
         public DateTime Fecha_Registro { get; set; }
         public Sucursal Sucursal { get; set; }
