@@ -18,23 +18,7 @@ function GetAll() {
             var reload = '';
             objPagination["dataSource"] = [...data]
             objPagination["endPagination"] = data.length
-            objPagination["currentPage"] = parseInt($('#currentPage > li.active').map(function () {
-                return $(this).text();
-            }).get()[0]);
             IniciarPaginacionDOM();
-            //$.each(data, (GetAll, Cliente) => {
-            //    reload += '<tr>';
-            //    reload += '<td>' + Cliente.nombre + '</td>';
-            //    reload += '<td>' + Cliente.apellidoPaterno + '</td>';
-            //    reload += '<td>' + Cliente.apellidoMaterno + '</td>';
-            //    reload += '<td>' + Cliente.email + '</td>';
-            //    reload += '<td>' + Cliente.telefono + '</td>';
-            //    reload += '<td>' + new Date(Cliente.fecha_Registro).toLocaleDateString('es-MX') + '</td>';
-            //    reload += '<td>' + Cliente.sucursal.nombre + '</td>';
-            //    reload += `<td><div class='d-flex gap-1'><a class='btn btn-sm btn-warning' href='#' onclick='return getbyID(${Cliente.idCliente})'>Editar</a><a class='btn btn-sm btn-danger' href='#' onclick=Delete(${Cliente.idCliente})>Borrar</a></div></td>`;
-            //    reload += '</tr>';
-            //});
-            $('#tabla-cliente tbody').html(reload);
         },
         error: function (xhr, status, error) {
             console.error('Error al obtener los datos:', error);
@@ -193,21 +177,6 @@ function getbyID(idCliente) {
 //        }
 //    })
 //}) 
-$(document).ready(function () {
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:5140/api/Cliente/GetAllSucursal",
-        data: "{}",
-        success: function (data) {
-            var s = '<option value="-1">Selecciona una sucursal</option>';
-            for (var i = 0; i < data.length; i++) {
-                s += '<option value="' + data[i].idSucursal + '">' + data[i].nombre + '</option>';
-            }
-            $("#IdSucursal").html(s);
-        }
-    });
-});
-
 function clearTextBox() {
     $('#IdCliente').val("");
     $('#Nombre').val("");
@@ -243,25 +212,84 @@ function listItem(event) {
 }
 
 function IniciarPaginacion(event) {
-    let init = event.target.selectedIndex
-    objPagination["showPagination"] = parseInt(event.target.options[init].outerText)
-    OperationPage();
+    let init = $(event.target).prop("selectedIndex")
+    if (init > 0) {
+        objPagination["showPagination"] = parseInt($(event.target).prop('options')[init].outerText)
+        objPagination["currentPage"] = parseInt($('#currentPage > li.active').text())
+        OperationPage();
+    }
 }
 
 function IniciarPaginacionDOM() {
-    let init = $('#PSelect').prop('selectedIndex')
-    objPagination["showPagination"] = parseInt($('#PSelect').prop('options')[init].text)
-    OperationPage();
+    debugger
+    objPagination["showPagination"] = 5
+    OperationPageDOM();
+}
+
+
+function OperationPageDOM() {
+    if ($('#pagination').children('ul').length === 0) {
+        $('#pagination').append(
+            $('<ul>').prop('id', 'currentPage').addClass('pagination pagination-sm').append([
+                $('<li>').addClass('page-item disabled').append(
+                    $('<a>').addClass('page-link').text('Previous')
+                ),
+                $('<li>').addClass('page-item').append(
+                    $('<a>').addClass('page-link').text('Next')
+                )
+            ])
+        )
+        let showStart = 0 * objPagination['showPagination']
+        let showEnd = showStart + objPagination['showPagination']
+        if (showStart > objPagination['dataSource'].length) {
+            showStart = objPagination['dataSource'].length
+        }
+        if (showEnd > objPagination['dataSource'].length) {
+            showEnd = objPagination['dataSource'].length;
+        }
+        $('#target').text(`Contenido de ${showStart} de ${showEnd}`)
+        objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
+        $('#tabla-cliente tbody').empty();
+        $.each(objPagination["currentPageData"], (index, value) => {
+            let row = $('<tr>')
+            row.append($('<td>').append(value.nombre))
+            row.append($('<td>').append(value.apellidoPaterno))
+            row.append($('<td>').append(value.apellidoMaterno))
+            row.append($('<td>').append(value.email))
+            row.append($('<td>').append(value.telefono))
+            row.append($('<td>').append(new Date(value.fecha_Registro).toLocaleDateString('es-MX')))
+            row.append($('<td>').append(value.sucursal.nombre))
+            let div = $('<div>')
+            div.addClass('d-flex gap-1')
+                .append($(`<a href='#' onclick='return getbyID(${value.idCliente})'>`).addClass('btn btn-warning btn-sm').text('Editar'))
+                .append($(`<a href='#' onclick='return Delete(${value.idCliente})'>`).addClass('btn btn-danger btn-sm').text('Eliminar'))
+            row.append($('<td>').append(div))
+            $('#tabla-cliente tbody').append(row)
+        })
+        let pagination = Math.ceil(objPagination["endPagination"] / objPagination["currentPageData"].length)
+        for (let i = 1; i <= pagination; i++) {
+            $('#currentPage > li').next().before().append(
+                $('<li>').addClass('page-item').append(
+                    $('<a>').addClass('page-link').text(i)
+                )
+            )
+        }
+        $('#currentPage').on('click', listItem)
+    }
 }
 
 function OperationPage() {
-    let showStart = (objPagination['currentPage'] - 1) * objPagination['endPagination']
-    let showEnd = showStart + objPagination['endPagination']
+    let showStart = 0 * objPagination['showPagination']
+    let showEnd = showStart + objPagination['showPagination']
+    if (showStart > objPagination['dataSource'].length) {
+        showStart = objPagination['dataSource'].length
+    }
     if (showEnd > objPagination['dataSource'].length) {
         showEnd = objPagination['dataSource'].length;
     }
-    objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
+    $('#target').text(`Contenido de ${showStart} de ${showEnd}`)
     $('#tabla-cliente tbody').empty();
+    objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
     $.each(objPagination["currentPageData"], (index, value) => {
         let row = $('<tr>')
         row.append($('<td>').append(value.nombre))
@@ -276,14 +304,14 @@ function OperationPage() {
             .append($(`<a href='#' onclick='return getbyID(${value.idCliente})'>`).addClass('btn btn-warning btn-sm').text('Editar'))
             .append($(`<a href='#' onclick='return Delete(${value.idCliente})'>`).addClass('btn btn-danger btn-sm').text('Eliminar'))
         row.append($('<td>').append(div))
-        console.log(value)
         $('#tabla-cliente tbody').append(row)
     })
+    let pagination = Math.ceil(objPagination["endPagination"] / objPagination["currentPageData"].length)
+    for (let i = 1; i <= pagination; i++) {
+        $('#currentPage > li').next().before().append(
+            $('<li>').addClass('page-item').text(i)
+        )
+    }
 }
 
-function buildTable() {
-
-}
-
-$('#PSelect').bind('change', IniciarPaginacion)
-$('#currentPage').bind('click', listItem)
+$('#PSelect').on('change', IniciarPaginacion)
