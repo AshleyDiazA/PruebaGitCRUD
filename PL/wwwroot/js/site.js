@@ -221,7 +221,6 @@ function IniciarPaginacion(event) {
 }
 
 function IniciarPaginacionDOM() {
-    debugger
     objPagination["showPagination"] = 5
     OperationPageDOM();
 }
@@ -247,7 +246,7 @@ function OperationPageDOM() {
         if (showEnd > objPagination['dataSource'].length) {
             showEnd = objPagination['dataSource'].length;
         }
-        $('#target').text(`Contenido de ${showStart} de ${showEnd}`)
+        $('#target').text(`Contenido de ${showStart + 1} de ${showEnd}`)
         objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
         $('#tabla-cliente tbody').empty();
         $.each(objPagination["currentPageData"], (index, value) => {
@@ -268,7 +267,7 @@ function OperationPageDOM() {
         })
         let pagination = Math.ceil(objPagination["endPagination"] / objPagination["currentPageData"].length)
         for (let i = 1; i <= pagination; i++) {
-            $('#currentPage > li').next().before().append(
+            $('#currentPage > li').next().before(
                 $('<li>').addClass('page-item').append(
                     $('<a>').addClass('page-link').text(i)
                 )
@@ -279,7 +278,7 @@ function OperationPageDOM() {
 }
 
 function OperationPage() {
-    let showStart = 0 * objPagination['showPagination']
+    let showStart = objPagination["currentPage"] * objPagination['showPagination']
     let showEnd = showStart + objPagination['showPagination']
     if (showStart > objPagination['dataSource'].length) {
         showStart = objPagination['dataSource'].length
@@ -306,12 +305,6 @@ function OperationPage() {
         row.append($('<td>').append(div))
         $('#tabla-cliente tbody').append(row)
     })
-    let pagination = Math.ceil(objPagination["endPagination"] / objPagination["currentPageData"].length)
-    for (let i = 1; i <= pagination; i++) {
-        $('#currentPage > li').next().before().append(
-            $('<li>').addClass('page-item').text(i)
-        )
-    }
 }
 
 $('#PSelect').on('change', IniciarPaginacion)
