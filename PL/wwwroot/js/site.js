@@ -12,10 +12,25 @@ $(document).ready(function () {
 function GetAll() {
     $.ajax({
         type: 'GET',
+        url: 'http://localhost:5140/api/Cliente/GetAllSucursal',
+        dataType: 'json',
+        success: function (data) {
+            if ($('#IdSucursal').children('option').length === 0) {
+                $.each(data, (index, sucursal) => {
+                    $('#IdSucursal').append($('<option>', {
+                        value: sucursal.idSucursal,
+                        text: sucursal.nombre
+                    }))
+                })
+            }
+        },
+        error: function () { }
+    })
+    $.ajax({
+        type: 'GET',
         url: 'http://localhost:5140/api/Cliente/GetAll',
         dataType: 'json',
         success: function (data) {
-            var reload = '';
             objPagination["dataSource"] = [...data]
             objPagination["endPagination"] = data.length
             IniciarPaginacionDOM();
@@ -203,12 +218,15 @@ function Cerrar() {
 }
 
 function listItem(event) {
-    objPagination["currentPage"] = parseInt(event.target.text)
-    let getList = $(event.currentTarget)
-    let actualList = $(event.target).closest('li')
-    getList.find('li').removeClass('active')
-    actualList.addClass('active')
-    OperationPage();
+    debugger
+    if (parseInt(event.target.text) > 0) {
+        objPagination["currentPage"] = parseInt(event.target.text)
+        let getList = $(event.currentTarget)
+        let actualList = $(event.target).closest('li')
+        getList.find('li').removeClass('active')
+        actualList.addClass('active')
+        OperationPage();
+    }
 }
 
 function IniciarPaginacion(event) {
@@ -278,7 +296,7 @@ function OperationPageDOM() {
 }
 
 function OperationPage() {
-    let showStart = objPagination["currentPage"] * objPagination['showPagination']
+    let showStart = (objPagination["currentPage"] - 1) * objPagination['showPagination']
     let showEnd = showStart + objPagination['showPagination']
     if (showStart > objPagination['dataSource'].length) {
         showStart = objPagination['dataSource'].length
@@ -286,7 +304,7 @@ function OperationPage() {
     if (showEnd > objPagination['dataSource'].length) {
         showEnd = objPagination['dataSource'].length;
     }
-    $('#target').text(`Contenido de ${showStart} de ${showEnd}`)
+    $('#target').text(`Contenido de ${showStart + 1} de ${showEnd}`)
     $('#tabla-cliente tbody').empty();
     objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
     $.each(objPagination["currentPageData"], (index, value) => {
