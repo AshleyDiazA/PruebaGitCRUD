@@ -39,33 +39,29 @@
                         </table>
                     </div>
                     <div class="card-footer p-0 d-flex justify-content-sm-end flex-wrap flex-xxl-column flex-lg-row">
-                        <div class="mx-1 text-center" id="target">
-                            Contenido de 4 de 5
+                        <div class="mx-1 my-2 text-center" id="target">
                         </div>
-                        <button type="button" class="btn btn-success btn-sm col-auto" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">Agregar</button>
                         <div class="mx-1 my-2">
-                        <select class="form-select form-select-sm align-content-stretch" id="PSelect">
-                            <option>Seleccione la cantidad de datos</option>
-                            <option selected value="1">5</option>
-                            <option value="2">10</option>
-                            <option value="3">20</option>
-                        </select>
-                    </div>
+                            <button type="button" class="btn btn-success btn-sm col-auto" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">Agregar</button>
+                        </div>
                         <div class="mx-1 my-2">
-                        <ul class="pagination pagination-sm col-4" id="currentPage">
-                            <li class="page-item disabled" id="prev">
-                                <a class="page-link">Previous</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" aria-current="page" href="#">1</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item" id="next">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        </ul>
-                    </div>
+                            <select class="form-select form-select-sm align-content-stretch" id="PSelect">
+                                <option>Seleccione la cantidad de datos</option>
+                                <option selected value="1">5</option>
+                                <option value="2">10</option>
+                                <option value="3">20</option>
+                            </select>
+                        </div>
+                        <div class="mx-1 my-2" id="pagination">
+                            @* <ul class="pagination pagination-sm col-4" id="currentPage">
+                                <li class="page-item disabled" id="prev">
+                                    <a class="page-link">Previous</a>
+                                </li>
+                                <li class="page-item" id="next">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul> *@
+                        </div>
                     </div>
                 </div>
             </div>
