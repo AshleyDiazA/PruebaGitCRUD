@@ -34,6 +34,22 @@ function GetAll() {
             objPagination["dataSource"] = [...data]
             objPagination["endPagination"] = data.length
             IniciarPaginacionDOM();
+<<<<<<< HEAD
+=======
+            $.each(data, (GetAll, Cliente) => {
+                reload += '<tr>';
+                reload += '<td>' + Cliente.nombre + '</td>';
+                reload += '<td>' + Cliente.apellidoPaterno + '</td>';
+                reload += '<td>' + Cliente.apellidoMaterno + '</td>';
+                reload += '<td>' + Cliente.email + '</td>';
+                reload += '<td>' + Cliente.telefono + '</td>';
+                reload += '<td>' + new Date(Cliente.fecha_Registro).toLocaleDateString('es-MX') + '</td>';
+                reload += '<td>' + Cliente.sucursal.nombre + '</td>';
+                reload += `<td><div class='d-flex gap-1'><a class='btn btn-sm btn-warning' href='#' onclick='return getbyID(${Cliente.idCliente})'>Editar</a><a class='btn btn-sm btn-danger' href='#' onclick=Delete(${Cliente.idCliente})>Borrar</a></div></td>`;
+                reload += '</tr>';
+            });
+            $('#tabla-cliente tbody').html(reload);
+>>>>>>> cambio
         },
         error: function (xhr, status, error) {
             console.error('Error al obtener los datos:', error);
