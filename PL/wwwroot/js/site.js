@@ -34,8 +34,7 @@ function GetAll() {
             objPagination["dataSource"] = [...data]
             objPagination["endPagination"] = data.length
             IniciarPaginacionDOM();
-<<<<<<< HEAD
-=======
+
             $.each(data, (GetAll, Cliente) => {
                 reload += '<tr>';
                 reload += '<td>' + Cliente.nombre + '</td>';
@@ -49,7 +48,6 @@ function GetAll() {
                 reload += '</tr>';
             });
             $('#tabla-cliente tbody').html(reload);
->>>>>>> cambio
         },
         error: function (xhr, status, error) {
             console.error('Error al obtener los datos:', error);
