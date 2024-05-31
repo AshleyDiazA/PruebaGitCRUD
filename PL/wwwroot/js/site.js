@@ -2,7 +2,6 @@
 }
 $(document).ready(function () {
     GetAll();
-
 })
 
 //por si no llega a funcionar el document.ready
@@ -83,7 +82,15 @@ function Add() {
         dataType: "JSON",
         success: function (result) {
             console.log("Cliente agregado exitosamente.");
-            GetAll();
+            $.ajax({
+                url: "http://localhost:5140/api/Cliente/GetAll",
+                dataType: "JSON",
+                type: "GET",
+                success: function (result) {
+                },
+                error: function () { },
+
+            })
             $('#closeModal').click();
         },
         error: function (errormessage) {
@@ -149,7 +156,16 @@ function Delete(IdCliente) {
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             success: function (result) {
-                GetAll();
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://localhost:5140/api/Cliente/GetAllSucursal',
+                    dataType: 'json',
+                    success: function (data) {
+                        objPagination["dataSource"] = [...data]
+                        objPagination["endPagination"] = data.length
+                    },
+                    error: function () { }
+                })
             },
             error: function (errormessage) {
                 alert(errormessage.responseText);
@@ -232,22 +248,27 @@ function Cerrar() {
 }
 
 function listItem(event) {
-    debugger
     if (parseInt(event.target.text) > 0) {
-        objPagination["currentPage"] = parseInt(event.target.text)
-        let getList = $(event.currentTarget)
-        let actualList = $(event.target).closest('li')
-        getList.find('li').removeClass('active')
-        actualList.addClass('active')
+        refreshPagination()
+        if (parseInt(event.target.text) === 1) {
+            $(event.currentTarget).find('li').first().addClass('disabled')
+        }
+        let info = objPagination["listItem"].length
+        $(event.currentTarget).find('li').last().toggleClass('disabled', $(objPagination["listItem"][info - 1]).text() == $(event.target).text())
+        $(event.currentTarget).find('li').removeClass('active')
+        $(event.target).closest('li').addClass('active')
+        objPagination["currentPage"] = parseInt($(event.target).text())
         OperationPage();
     }
 }
 
 function IniciarPaginacion(event) {
+    debugger
     let init = $(event.target).prop("selectedIndex")
     if (init > 0) {
         objPagination["showPagination"] = parseInt($(event.target).prop('options')[init].outerText)
         objPagination["currentPage"] = parseInt($('#currentPage > li.active').text())
+        refreshPagination();
         OperationPage();
     }
 }
@@ -256,7 +277,6 @@ function IniciarPaginacionDOM() {
     objPagination["showPagination"] = 5
     OperationPageDOM();
 }
-
 
 function OperationPageDOM() {
     if ($('#pagination').children('ul').length === 0) {
@@ -270,17 +290,16 @@ function OperationPageDOM() {
                 )
             ])
         )
-        let showStart = 0 * objPagination['showPagination']
-        let showEnd = showStart + objPagination['showPagination']
-        if (showStart > objPagination['dataSource'].length) {
-            showStart = objPagination['dataSource'].length
+        let showStart = 0 * objPagination["showPagination"];
+        let showEnd = showStart + objPagination["showPagination"]
+        if (showStart > objPagination["endPagination"]) {
+            showStart = objPagination["endPagination"]
         }
-        if (showEnd > objPagination['dataSource'].length) {
-            showEnd = objPagination['dataSource'].length;
+        if (showEnd > objPagination["endPagination"]) {
+            showEnd = objPagination["endPagination"]
         }
-        $('#target').text(`Contenido de ${showStart + 1} de ${showEnd}`)
+        $('#target').text(`Contenido de ${showStart + 1} de ${objPagination["endPagination"]}`)
         objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
-        $('#tabla-cliente tbody').empty();
         $.each(objPagination["currentPageData"], (index, value) => {
             let row = $('<tr>')
             row.append($('<td>').append(value.nombre))
@@ -291,21 +310,72 @@ function OperationPageDOM() {
             row.append($('<td>').append(new Date(value.fecha_Registro).toLocaleDateString('es-MX')))
             row.append($('<td>').append(value.sucursal.nombre))
             let div = $('<div>')
-            div.addClass('d-flex gap-1')
+            div.addClass('d-flex h-auto col-sm justify-content-center align-items-center gap-1')
                 .append($(`<a href='#' onclick='return getbyID(${value.idCliente})'>`).addClass('btn btn-warning btn-sm').text('Editar'))
                 .append($(`<a href='#' onclick='return Delete(${value.idCliente})'>`).addClass('btn btn-danger btn-sm').text('Eliminar'))
             row.append($('<td>').append(div))
             $('#tabla-cliente tbody').append(row)
         })
-        let pagination = Math.ceil(objPagination["endPagination"] / objPagination["currentPageData"].length)
-        for (let i = 1; i <= pagination; i++) {
-            $('#currentPage > li').next().before(
+        let totalPage = Math.ceil(objPagination["endPagination"] / objPagination["showPagination"])
+        objPagination["listItem"] = []
+        for (let i = 0; i < totalPage; i++) {
+            objPagination["listItem"].push(
                 $('<li>').addClass('page-item').append(
-                    $('<a>').addClass('page-link').text(i)
+                    $('<a>').addClass('page-link').text(i + 1)
                 )
             )
         }
+        let currentPage = $('#currentPage > li')
+        objPagination["listItem"][0].addClass('active')
+        if (objPagination > 3) {
+            currentPage.first().after(
+                [...objPagination["listItem"].slice(0, 2)]
+            )
+        } else {
+            currentPage.first().after(
+                [...objPagination["listItem"]]
+            )
+        }
         $('#currentPage').on('click', listItem)
+    }
+}
+
+function refreshPagination() {
+    $('#currentPage').empty().append(
+        [$('<li>').addClass('page-item').append(
+            $('<a>').addClass('page-link').text('Previous')
+        ), $('<li>').addClass('page-item').append(
+            $('<a>').addClass('page-link').text('Next')
+        )]
+    )
+    let totalPage = Math.ceil(objPagination["endPagination"] / objPagination["showPagination"])
+    if (objPagination["listItem"].length > 3) {
+        $('#currentPage > li').first().after(
+            [...objPagination["listItem"].slice(0, 2)]
+        )
+    } else {
+        $('#currentPage > li').first().after(
+            [...objPagination["listItem"]]
+        )
+    }
+}
+
+function refreshPagination(pointTarget) {
+    $('#currentPage').empty().append(
+        [$('<li>').addClass('page-item').append(
+            $('<a>').addClass('page-link').text('Previous')
+        ), $('<li>').addClass('page-item').append(
+            $('<a>').addClass('page-link').text('Next')
+        )]
+    )
+    if (objPagination["listItem"].length > 3) {
+        $('#currentPage > li').first().after(
+            [...objPagination["listItem"].slice(0, 2)]
+        )
+    } else {
+        $('#currentPage > li').first().after(
+            [...objPagination["listItem"]]
+        )
     }
 }
 
@@ -318,8 +388,8 @@ function OperationPage() {
     if (showEnd > objPagination['dataSource'].length) {
         showEnd = objPagination['dataSource'].length;
     }
-    $('#target').text(`Contenido de ${showStart + 1} de ${showEnd}`)
-    $('#tabla-cliente tbody').empty();
+    $('#tabla-cliente tbody').empty()
+    $('#target').text(`Contenido de ${showStart + 1} de ${objPagination["endPagination"]}`)
     objPagination["currentPageData"] = objPagination["dataSource"].slice(showStart, showEnd)
     $.each(objPagination["currentPageData"], (index, value) => {
         let row = $('<tr>')
